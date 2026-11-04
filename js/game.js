@@ -3816,7 +3816,10 @@
           cp.orb.material.color.setHex(0x4ade80);
           state.currentCheckpoint = { x: cp.x, y: cp.y, z: cp.z };
           playSfx('checkpoint');
-          showToast('🚩 Checkpoint Reached!');
+          state.levelScore += 20;
+          state.totalScore += 20;
+          updateHUD();
+          showToast('🚩 Checkpoint reached! +20 points. If you fall, you restart here.');
         }
       }
 
