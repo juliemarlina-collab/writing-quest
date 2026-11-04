@@ -2,7 +2,7 @@
    Crystal Quest 4: Write & Win - GAME DATA (edit this file to change content)
    --------------------------------------------------------------------------
    HEROES : the 4 playable heroes.
-   WORLDS : the 3 levels (10, 11, 12). Each has 3 Writing Anvils in `challenges`.
+   WORLDS : the 3 levels (10, 11, 12). Each has 3 Writing Sessions in `challenges`.
    MOCK   : the 75-minute full mock paper (Task 1 + Task 2).
    ========================================================================== */
 window.CQ_DATA = (function () {
@@ -79,7 +79,7 @@ window.CQ_DATA = (function () {
   ];
 
   /* ------------------------------------------------------------------------
-     Each Writing Anvil = one task with Quilla the Fox Scribe.
+     Each Writing Session = one task with Quilla the Fox Scribe.
        type : 'sort'   - choose from fixed buttons (e.g. Formal / Informal / Too casual)
               'mcq'    - 3-option questions (shuffled)
               'gapped' - sentences A-G fill gaps [1]-[6]
@@ -539,7 +539,7 @@ window.CQ_DATA = (function () {
           time: '50 minutes in the exam',
           examMinutes: 50,
           skill: 'Task 2: extended essay',
-          instructions: 'The Writer’s Block Golem guards the last anvil. Write your essay to free it. Then show your structure and check your work.',
+          instructions: 'The Writer’s Block Golem guards the last writing session. Write your essay to free it. Then show your structure and check your work.',
           rubric: 'Write an essay of at least 250 words on the topic below. Support your answer with reasons and examples.',
           stimulus: {
             label: 'Essay topic',

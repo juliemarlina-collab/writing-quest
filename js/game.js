@@ -1276,33 +1276,57 @@
   // textured ground. Falls back to simple shapes if models cannot load.
   // -------------------------------------------------------------------
   const MODELS_BASE = 'models/';
+  let islandVariant = 0;
+  function sceneryLook(worldId) {
+    const sc = WORLD_SCENERY[worldId] || WORLD_SCENERY[1];
+    const vs = sc.variants;
+    return vs ? Object.assign({}, sc, vs[islandVariant % vs.length]) : sc;
+  }
   const WORLD_SCENERY = {
-    1: { // Level 7: Lantern Library (autumn trees, bookshelves, lanterns)
-      features: ['tree_oak', 'tree_detailed', 'tree_default', 'tree_fat'],
+    1: { // Level 10: Inkleaf Village (cobbled lanes, lavender feather-trees, lanterns)
+      features: ['tree_oak', 'tree_detailed', 'tree_fat', 'tree_default'],
       featureScale: [3.0, 3.6],
-      small: ['mushroom_tanGroup', 'flower_yellowA', 'flower_purpleA', 'plant_bushLarge', 'grass_large', 'stump_round', 'rock_smallA'],
+      small: ['flower_purpleA', 'flower_purpleB', 'flower_purpleC', 'plant_bushLarge', 'grass_large', 'stump_round', 'mushroom_tanGroup'],
       smallScale: [2.2, 3.2],
       guardian: 'statue_head',
       extra: ['log_stack'],
-      topTint: 0x6aa84f, cliffTint: 0x9c7b56, waterTint: 0x3b82f6
+      variants: [
+        { ground: 'cobble', topTint: 0xc9a07c, leaf: 0x8a5bd6 },
+        { ground: 'grass', topTint: 0x7cc56a, leaf: 0x1f9e86 },
+        { ground: 'cobble', topTint: 0xd6a3b5, leaf: 0xe0a530 }
+      ],
+      ground: 'cobble', leaf: 0x8a5bd6,
+      topTint: 0xc9a07c, cliffTint: 0xa98a6c, waterTint: 0x3b82f6
     },
-    2: { // Level 8: Ruins of Riddles (sandy stone, broken columns)
-      features: ['statue_columnDamaged', 'rock_tallA', 'stone_tallB', 'tree_pineRoundA'],
+    2: { // Level 11: Courier Citadel (white marble, teal trees, columns)
+      features: ['statue_column', 'tree_pineRoundA', 'statue_obelisk', 'tree_default'],
       featureScale: [3.0, 3.8],
-      small: ['stone_smallA', 'rock_smallA', 'grass_large', 'plant_bush', 'statue_block', 'flower_yellowA'],
+      small: ['flower_purpleA', 'flower_yellowA', 'plant_bush', 'grass_large', 'statue_block', 'stone_smallA'],
       smallScale: [2.0, 3.0],
       guardian: 'statue_head',
-      extra: ['statue_column', 'statue_obelisk'],
-      topTint: 0x8fbf6a, cliffTint: 0xb9b2c8, waterTint: 0x2b8fd6
+      extra: ['statue_columnDamaged'],
+      variants: [
+        { ground: 'marble', topTint: 0xcdbfe3, leaf: 0x1f9e86, stone: 0xd8cfe8 },
+        { ground: 'grass', topTint: 0x86c95f, leaf: 0x3f9e3c, stone: 0xe8e2d0 },
+        { ground: 'marble', topTint: 0xb9d4f0, leaf: 0x8a5bd6, stone: 0xc9b8ec }
+      ],
+      ground: 'marble', leaf: 0x1f9e86, stone: 0xd8cfe8,
+      topTint: 0xcdbfe3, cliffTint: 0xd9d2e9, waterTint: 0x2b8fd6
     },
-    3: { // Level 9: Sky Garden (flowers, columns, the Crystal Sphinx)
-      features: ['tree_oak', 'tree_fat', 'statue_column', 'tree_detailed'],
+    3: { // Level 12: Spellwright's Forge (purple rune slabs, violet trees, obelisks)
+      features: ['statue_obelisk', 'statue_column', 'tree_fat', 'statue_columnDamaged'],
       featureScale: [3.0, 3.8],
-      small: ['flower_purpleA', 'flower_purpleB', 'flower_redA', 'flower_yellowA', 'plant_bushLarge', 'lily_large', 'grass_large'],
+      small: ['flower_purpleA', 'flower_purpleB', 'flower_purpleC', 'stone_smallA', 'rock_smallA', 'statue_ring'],
       smallScale: [2.0, 3.0],
       guardian: 'statue_ring',
-      extra: ['statue_columnDamaged', 'statue_obelisk'],
-      topTint: 0x6fbf5a, cliffTint: 0xcfc6e6, waterTint: 0x8b7cf6
+      extra: [],
+      variants: [
+        { ground: 'forge', topTint: 0x7e68b8, leaf: 0x7c3aed, stone: 0x8f7bc4 },
+        { ground: 'marble', topTint: 0xb8a6e0, leaf: 0x1f9e86, stone: 0xd8cfe8 },
+        { ground: 'forge', topTint: 0x9a5a9e, leaf: 0xdb2777, stone: 0xb08ad0 }
+      ],
+      ground: 'forge', leaf: 0x7c3aed, stone: 0x8f7bc4,
+      topTint: 0x7e68b8, cliffTint: 0x7d6aa8, waterTint: 0x8b7cf6
     }
   };
   const KENNEY_COLOURS = {
@@ -1354,6 +1378,13 @@
   function placeModel(name, x, y, z, scale, rotY = Math.random() * Math.PI * 2) {
     if (!modelTpl[name]) return null;
     const m = modelTpl[name].clone(true);
+    const scw = sceneryLook(buildingWorldId);
+    if (scw.leaf || scw.stone) m.traverse(o => {
+      if (!o.isMesh || !o.material) return;
+      const nm = o.material.name || '';
+      const c = /^leafs/.test(nm) ? scw.leaf : (/^stone/.test(nm) ? scw.stone : null);
+      if (c) { o.material = o.material.clone(); o.material.color.setHex(c); }
+    });
     m.scale.setScalar(scale);
     m.position.set(x, y, z);
     m.rotation.y = rotY;
@@ -1413,6 +1444,25 @@
         g.fillStyle = 'rgba(80,60,40,0.35)';
         g.fillRect(20 + Math.random() * 200, y + 12, 4, 4);
       }
+    } else if (kind === 'cobble' || kind === 'marble' || kind === 'forge') {
+      // stone tiles: Inkleaf cobbles, Citadel marble, Forge rune slabs
+      const n = kind === 'cobble' ? 6 : 4, sz = 256 / n;
+      g.fillStyle = kind === 'forge' ? '#9f9fae' : '#cfcfcf'; g.fillRect(0, 0, 256, 256);
+      for (let yy = 0; yy < n; yy++) for (let xx = 0; xx < n; xx++) {
+        const off = kind === 'cobble' && yy % 2 ? sz / 2 : 0;
+        const v = 215 + Math.floor(Math.random() * 40);
+        g.fillStyle = `rgb(${v},${v},${v})`;
+        const pad = kind === 'cobble' ? 3 : 2;
+        const x0 = xx * sz + off + pad, y0 = yy * sz + pad, ww = sz - pad * 2, hh = sz - pad * 2;
+        if (kind === 'cobble') { g.beginPath(); g.roundRect ? g.roundRect(x0, y0, ww, hh, 9) : g.rect(x0, y0, ww, hh); g.fill(); if (off) { g.beginPath(); g.rect(x0 - 256, y0, ww, hh); g.fill(); } }
+        else g.fillRect(x0, y0, ww, hh);
+        if (kind === 'marble') { g.strokeStyle = 'rgba(150,140,170,.35)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x0 + Math.random() * ww, y0); g.quadraticCurveTo(x0 + ww / 2, y0 + hh / 2, x0 + Math.random() * ww, y0 + hh); g.stroke(); }
+      }
+      if (kind !== 'cobble') {
+        g.strokeStyle = kind === 'forge' ? 'rgba(255,200,80,.9)' : 'rgba(214,170,60,.8)'; g.lineWidth = kind === 'forge' ? 3 : 2;
+        for (let k = 0; k <= n; k++) { g.beginPath(); g.moveTo(k * sz, 0); g.lineTo(k * sz, 256); g.stroke(); g.beginPath(); g.moveTo(0, k * sz); g.lineTo(256, k * sz); g.stroke(); }
+        if (kind === 'forge') { g.beginPath(); g.arc(128, 128, 70, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.moveTo(128, 70); g.lineTo(178, 128); g.lineTo(128, 186); g.lineTo(78, 128); g.closePath(); g.stroke(); }
+      }
     } else if (kind === 'water') {
       const grd = g.createLinearGradient(0, 0, 0, 256);
       grd.addColorStop(0, '#e0f7ff'); grd.addColorStop(1, '#ffffff');
@@ -1438,8 +1488,9 @@
 
   // Called by addPlatform to dress the top and cliff with texture
   function dressPlatform(group, topMesh, baseMesh, w, d, colorHex, worldId) {
-    const sc = WORLD_SCENERY[worldId] || WORLD_SCENERY[1];
-    topMesh.material = texturedMat('grass', colorHex, w, d);
+    const sc = sceneryLook(worldId);
+    const ground = sc.ground || 'grass';
+    topMesh.material = texturedMat(ground, ground === 'grass' ? colorHex : sc.topTint, w, d);
     baseMesh.material = texturedMat('rock', sc.cliffTint, w, 2);
   }
 
@@ -1981,25 +2032,31 @@
       const islandZ = curZ;
 
       // Main Sunlit Island Platform
+      islandVariant = i;
       addPlatform(0, 0, islandZ, 10.5, 1.6, 12.0, worldDef.groundColor);
       if (MODELS_OK) decorateIsland(worldDef, islandZ, 10.5, 12.0, 0.8);
       addLevelSetPiece(worldDef, i, islandZ);
 
       // Decorative Trees / Waterfalls / Astral Towers on Island Edges
-      addDecorativeScenery(worldDef, -4.1, 0.8, islandZ - 2.2, i);
-      addDecorativeScenery(worldDef, 4.1, 0.8, islandZ + 2.2, i + 1);
+      // three layouts that take turns, so no two islands in a row look alike
+      const LAYOUTS = [
+        { trees: [[-4.1, -2.2], [4.1, 2.2]], mush: [-3.2, 1.2], sign: [3.4, 4.4], cp: 0, coins: 'grid' },
+        { trees: [[4.1, -2.2], [-4.1, 2.6]], mush: [3.2, 1.0], sign: [-3.4, 4.4], cp: -1.2, coins: 'zigzag' },
+        { trees: [[-4.1, 3.4], [4.1, -3.0], [-4.3, -2.6]], mush: [3.1, 2.4], sign: [-3.0, 4.6], cp: 1.2, coins: 'arc' }
+      ];
+      const lay = LAYOUTS[i % LAYOUTS.length];
+      lay.trees.forEach(([tx, tz], k) => addDecorativeScenery(worldDef, tx, 0.8, islandZ + tz, i + k));
+      addBouncyMushroom(lay.mush[0], 0.8, islandZ + lay.mush[1]);
+      addCheckpoint(lay.cp, 0.8, islandZ + 3.5);
+      if (!COMPACT) addProp('item_signpost', lay.sign[0], 0.8, islandZ + lay.sign[1], 1.3);
 
-      // Bouncy Giant Red Mushroom Pad on side of island for fun high jumps!
-      addBouncyMushroom(-3.2, 0.8, islandZ + 1.2);
-
-      // Checkpoint at start of each island
-      addCheckpoint(0, 0.8, islandZ + 3.5);
-      if (!COMPACT) addProp('item_signpost', 3.4, 0.8, islandZ + 4.4, 1.3);
-
-      // Crystal Coins along the island
-      for (let c = 0; c < coinsPerSegment && coinsPlaced < worldDef.totalCoins; c++) {
-        const cx = ((c % 3) - 1) * 2.0;
-        const cz = islandZ + 2.2 - c * 1.4;
+      // Golden quills: grid, zigzag or arc
+      const nC = Math.min(coinsPerSegment, worldDef.totalCoins - coinsPlaced);
+      for (let c = 0; c < nC; c++) {
+        let cx, cz;
+        if (lay.coins === 'zigzag') { cx = c % 2 ? 1.7 : -1.7; cz = islandZ + 2.8 - c * 1.05; }
+        else if (lay.coins === 'arc') { const t = nC > 1 ? c / (nC - 1) : 0.5; cx = -2.6 + t * 5.2; cz = islandZ + 2.6 - Math.sin(t * Math.PI) * 2.6; }
+        else { cx = ((c % 3) - 1) * 2.0; cz = islandZ + 2.2 - Math.floor(c / 3) * 1.4 - (c % 3) * 0.05; }
         addCoin(cx, 1.55, cz);
         coinsPlaced++;
       }
@@ -2106,6 +2163,7 @@
 
     // Final Sanctuary Island + Portal
     const finalZ = curZ;
+    islandVariant = 0;
     addPlatform(0, 0.2, finalZ, 11.5, 1.6, 11.5, worldDef.groundColor);
     while (coinsPlaced < worldDef.totalCoins) {
       const ang = (coinsPlaced / 8) * Math.PI * 2;
@@ -2399,7 +2457,7 @@
     owlPose(crystalObj, 'talk');
 
     const worldDef = WORLDS.find(w => w.id === state.currentWorldId);
-    rdEl('rd-badge').textContent = `Anvil ${crystalObj.index + 1} of ${worldDef.challenges.length}`;
+    rdEl('rd-badge').textContent = `Session ${crystalObj.index + 1} of ${worldDef.challenges.length}`;
     rdEl('rd-part').textContent = 'MUET Writing ' + ch.part + ' • ' + ch.time;
     rdEl('rd-title').textContent = ch.title;
     rdEl('rd-guardian').textContent = '🦉 ' + ch.guardian + (crystalObj.solved ? '  (review mode: no points)' : '');
@@ -2653,9 +2711,9 @@
     if (state.challengesSolved >= worldDef.challenges.length && portalObject) {
       portalObject.unlocked = true;
       portalObject.vortex.material.opacity = 0.95;
-      showToast('🌀 All anvils forged! The portal is open.');
+      showToast('🌀 All writing sessions complete! The portal is open.');
     } else {
-      showToast('📜 The scroll bridge is open! Head to the next anvil.');
+      showToast('📜 The scroll bridge is open! Head to the next writing session.');
     }
     updateHUD();
     saveProgress();
@@ -2777,7 +2835,7 @@
     owlPose(crystalObj, 'talk');
 
     const worldDef = WORLDS.find(w => w.id === state.currentWorldId);
-    wEl('wr-badge').textContent = ch.mock ? 'Mock paper' : `Anvil ${crystalObj.index + 1} of ${worldDef.challenges.length}`;
+    wEl('wr-badge').textContent = ch.mock ? 'Mock paper' : `Session ${crystalObj.index + 1} of ${worldDef.challenges.length}`;
     wEl('wr-part').textContent = 'MUET Writing ' + ch.part + ' • ' + ch.time;
     wEl('wr-title').textContent = ch.title;
     wEl('wr-guardian').textContent = '🦊 ' + ch.guardian + (crystalObj.solved ? '  (practise again: no extra points)' : '');
@@ -3077,7 +3135,7 @@
     if (W.obj && !W.ch.mock) owlPose(W.obj, W.obj.solved ? 'point' : 'idle');
     if (player.animState === 'listen' || player.animState === 'answer') setHeroAnimState('idle', 0);
   }
-  wEl('wr-close').addEventListener('click', () => { hideWriteModal(); showToast('💾 Your writing is kept on this device. Come back to the anvil to continue.'); });
+  wEl('wr-close').addEventListener('click', () => { hideWriteModal(); showToast('💾 Your writing is kept on this device. Come back to Quilla to continue.'); });
   wEl('wr-font-dec').addEventListener('click', () => { rdSize = Math.max(0, rdSize - 1); applyTextSize(); wEl('modal-write').style.setProperty('--rd-size', RD_SIZES[rdSize] + 'rem'); });
   wEl('wr-font-inc').addEventListener('click', () => { rdSize = Math.min(3, rdSize + 1); applyTextSize(); wEl('modal-write').style.setProperty('--rd-size', RD_SIZES[rdSize] + 'rem'); });
   wEl('modal-write').style.setProperty('--rd-size', RD_SIZES[rdSize] + 'rem');
@@ -3140,7 +3198,7 @@
     document.getElementById('results-subtitle').textContent =
       (state.studentName ? state.studentName + (state.studentClass ? ' (' + state.studentClass + ')' : '') + ': ' : '') +
       (isFinalWorld
-        ? 'You freed the Writer\u2019s Block Golem and forged all nine anvils! Ready for the 75-minute Mock Paper?'
+        ? 'You freed the Writer\u2019s Block Golem and completed all nine writing sessions! Ready for the 75-minute Mock Paper?'
         : 'You opened the ancient portal and earned +300 Level Completion points!');
 
     const starsEl = document.getElementById('results-stars');
@@ -3342,10 +3400,10 @@
     let msg;
     if (state.challengesSolved < nB) {
       msg = COMPACT
-        ? `Anvil ${state.challengesSolved + 1}/${nB}: walk to Quilla, tap ✒️ WRITE`
-        : `Forge Anvil ${state.challengesSolved + 1} of ${nB} with Quilla the Fox Scribe (Press E) to unlock the bridge!`;
+        ? `Session ${state.challengesSolved + 1}/${nB}: walk to Quilla, tap ✒️ WRITE`
+        : `Do Writing Session ${state.challengesSolved + 1} of ${nB} with Quilla the Fox Scribe (Press E) to unlock the bridge!`;
     } else {
-      msg = COMPACT ? 'All anvils forged! Run to the portal 🌀' : `All ${nB} anvils forged! Step into the glowing Portal ahead!`;
+      msg = COMPACT ? 'All sessions done! Run to the portal 🌀' : `All ${nB} writing sessions complete! Step into the glowing Portal ahead!`;
     }
     const wrapEl = document.getElementById('hud-objective-wrap');
     if (objText.textContent !== msg) {
@@ -3807,7 +3865,7 @@
         if (portalObject.unlocked) {
           completeCurrentLevel();
         } else {
-          showToast('🔒 Forge all three anvils in this level to open the Portal!');
+          showToast('🔒 Complete all three writing sessions in this level to open the Portal!');
         }
       }
     }

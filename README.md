@@ -3,9 +3,9 @@
 A 3D writing-practice game for MUET Writing (800/4), Levels 10–12 of the Crystal Quest
 series (1–3 *Listen & Leap*, 4–6 *Speak & Conquer*, 7–9 *Read & Rise*).
 The Writer's Block Golem has frozen the forge. Students write with **Quilla the Fox Scribe**
-to forge nine writing anvils.
+to complete nine writing sessions.
 
-| Level | Land | Anvils |
+| Level | Land | Writing sessions |
 |---|---|---|
 | 10 | Inkleaf Village | Formal / informal / too casual sort · Read the task & fix Siti's draft · **Write: reply to Danial** (Task 1, informal, 100+ words) |
 | 11 | Courier Citadel | Upgrade to formal · Build a formal email (gapped) · **Write: email to Puan Rahmah** (Task 1, formal, 100+ words) |
@@ -18,9 +18,9 @@ tasks, as in MUET (about 25 min for Task 1, 50 for Task 2), no frames and no mod
 
 - Task 1: reply to an email or letter, **at least 100 words**, using **all the notes**. Suggested time 25 minutes.
 - Task 2: essay of **at least 250 words** (argumentative, discursive or problem-solution). Suggested time 50 minutes.
-- Practice levels have **no timer**. Students can switch on **⏱ Exam timing** at any writing anvil.
+- Practice levels have **no timer**. Students can switch on **⏱ Exam timing** in any writing session.
 
-## How a writing anvil works
+## How a writing session works
 
 1. **Write.** The task, stimulus and notes are on the left, the writing pad on the right
    (on a tablet: task on top). There is a live word counter, and **sentence frames** to tap
@@ -33,7 +33,7 @@ tasks, as in MUET (about 25 min for Task 1, 50 for Task 2), no frames and no mod
 4. **Stars:** ⭐ word target reached · ⭐⭐ every label found · ⭐⭐⭐ every check ticked (100 points per star).
    The game never claims a MUET band: the student checks, the lecturer marks.
 
-The other anvils (sort, multiple choice, gapped) work like the reading game: two tries,
+The other sessions (sort, multiple choice, gapped) work like the reading game: two tries,
 and the guide sentence that proves the answer is highlighted.
 
 **Scroll bridges** unroll as the student works. **Typo Inklings** patrol the islands.
@@ -56,7 +56,7 @@ In a model answer, `marks` must be copied exactly from the model text.
 Swap art by replacing a file with the same name: `quilla_idle/talk/happy/point.webp`,
 `enemy_inkling / inkling_move / inkling_hit.webp`, `golem_idle/roar/attack/think/happy/fly.webp`
 (poses face right), `card_w1…w3.webp`, `backdrop_w1…w3.webp`, `title_writing.webp`.
-Optional: add `item_anvil_dim.webp` / `item_anvil.webp` (unforged / forged anvil) and
+Optional: add `item_anvil_dim.webp` / `item_anvil.webp` (the anvil pictures that mark an unfinished / finished writing session) and
 `item_quill.webp` (collectible); without them the game draws a 3D anvil and uses the golden scroll.
 
 ## Credits

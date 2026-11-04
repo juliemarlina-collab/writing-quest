@@ -57,10 +57,10 @@
         </div>
       </div>
       <div class="h-6 w-px bg-purple-400/30"></div>
-      <div class="flex items-center gap-1.5" title="Writing anvils forged">
+      <div class="flex items-center gap-1.5" title="Writing sessions completed">
         <span class="text-lg">⚒️</span>
         <div class="leading-tight">
-          <div class="text-[11px] uppercase tracking-wider text-cyan-300 font-semibold">Anvils</div>
+          <div class="text-[11px] uppercase tracking-wider text-cyan-300 font-semibold">Sessions</div>
           <div id="hud-listening" class="font-display font-bold text-sm text-cyan-200">0 / 5</div>
         </div>
       </div>
@@ -124,7 +124,7 @@
   <div id="hud-objective-wrap" class="hidden absolute top-16 sm:top-20 left-1/2 -translate-x-1/2 z-10 pointer-events-none w-full max-w-md px-3">
     <div class="glass-panel rounded-full px-4 py-1.5 text-center text-xs sm:text-sm font-medium text-purple-100 shadow-lg flex items-center justify-center gap-2">
       <span id="hud-objective-icon" class="text-amber-300">✨</span>
-      <span id="hud-objective-text">Walk to the anvil and Quilla the Fox Scribe ahead, then press E!</span>
+      <span id="hud-objective-text">Walk to Quilla the Fox Scribe ahead, then press E!</span>
     </div>
   </div>
 
@@ -132,7 +132,7 @@
   <div id="interaction-prompt" class="hidden absolute bottom-28 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
     <button id="btn-interact-prompt" type="button" class="crystal-btn gold-border bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 text-white font-display font-bold px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2.5 text-sm sm:text-base animate-bounce">
       <span class="bg-amber-400 text-slate-950 font-extrabold px-2 py-0.5 rounded-md text-xs">E</span>
-      <span id="interaction-prompt-label">Write at the anvil</span>
+      <span id="interaction-prompt-label">Start the writing session</span>
     </button>
   </div>
 
@@ -176,7 +176,7 @@
           <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1 rounded-full bg-purple-500/30 border border-purple-400/50 text-purple-100 text-xs font-semibold">
             <span>✒️ MUET 800/4 Writing • Task 1 &amp; Task 2</span>
             <span>•</span>
-            <span>9 writing anvils • Levels 10–12 • 75-min mock</span>
+            <span>9 writing sessions • Levels 10–12 • 75-min mock</span>
           </div>
 
           <div>
@@ -194,7 +194,7 @@
               <div class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
                 <span>🔔 Sound check</span>
               </div>
-              <div id="voice-engine-status" class="text-xs text-slate-300">Game sounds only. Use A− / A+ at an anvil to change the text size.</div>
+              <div id="voice-engine-status" class="text-xs text-slate-300">Game sounds only. Use A− / A+ in a writing session to change the text size.</div>
             </div>
             <button id="btn-test-voice" type="button" class="crystal-btn px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-display font-extrabold text-xs shadow">
               🔔 Test Sound
@@ -304,7 +304,7 @@
       <div class="flex items-center justify-between border-b border-purple-400/30 pb-3">
         <div>
           <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-cyan-300">Select Enchanted World</h2>
-          <p class="text-xs sm:text-sm text-purple-200">Forge three writing anvils in each level to unlock the bridges and open the portal.</p>
+          <p class="text-xs sm:text-sm text-purple-200">Complete three writing sessions in each level to unlock the bridges and open the portal.</p>
         </div>
         <button id="btn-close-worlds" type="button" class="crystal-btn px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-bold text-slate-200">✕ Close</button>
       </div>
@@ -323,7 +323,7 @@
           <div class="rd-icon">✒️</div>
           <div class="rd-head-text">
             <div class="rd-tags">
-              <span id="wr-badge" class="rd-badge">Anvil 1 of 3</span>
+              <span id="wr-badge" class="rd-badge">Session 1 of 3</span>
               <span id="wr-part" class="rd-part">MUET Writing Task 1</span>
             </div>
             <h3 id="wr-title" class="rd-title">Title</h3>
@@ -364,7 +364,7 @@
             <div id="wr-stars" class="wr-stars"></div>
             <div class="wr-actions">
               <button id="wr-back-edit" type="button" class="rd-tool">← Edit my writing</button>
-              <button id="wr-save" type="button" class="rd-continue crystal-btn">✨ Forge it! Save &amp; restore the anvil</button>
+              <button id="wr-save" type="button" class="rd-continue crystal-btn">✨ Forge it! Save &amp; complete the session</button>
             </div>
             <p class="wr-hint">Quilla’s model answer is now open on the left, colour-coded the same way. Compare: did you develop each part as much?</p>
           </div>
@@ -442,7 +442,7 @@
             <li><strong class="text-amber-300">W / A / S / D</strong> or <strong class="text-amber-300">Arrow Keys</strong>: Run &amp; steer hero</li>
             <li><strong class="text-amber-300">Spacebar</strong>: Jump (bounce high on red mushrooms!)</li>
             <li><strong class="text-amber-300">Drag Mouse</strong> or <strong class="text-amber-300">C Key</strong>: Orbit 360° / Switch Selfie Camera</li>
-            <li><strong class="text-amber-300">E Key</strong> / ✒️ WRITE: Open the anvil next to Quilla</li>
+            <li><strong class="text-amber-300">E Key</strong> / ✒️ WRITE: Start a writing session with Quilla</li>
           </ul>
         </div>
         <div class="bg-slate-900/80 p-4 rounded-2xl border border-purple-400/30 space-y-2">
@@ -537,7 +537,7 @@
         World 1 Complete!
       </h2>
       <p id="results-subtitle" class="text-xs sm:text-sm text-purple-200">
-        You forged the anvils and opened the portal!
+        You completed the writing sessions and opened the portal!
       </p>
 
       <!-- Stars Row -->
